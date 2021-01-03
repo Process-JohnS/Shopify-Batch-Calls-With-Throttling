@@ -27,7 +27,7 @@ const dispatchTask = async <R>(task: IShopifyTask<R>): Promise<IShopifyTaskRespo
   try {
     response = await resource.list(params);
   } catch (err) {
-    response = err.response.body;
+    response = err.response.body as Error;
   }
   return { response } as IShopifyTaskResponse<R>;
 }
