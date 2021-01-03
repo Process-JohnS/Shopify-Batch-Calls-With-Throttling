@@ -6,7 +6,7 @@ import fs from 'fs';
 import config from './config.json';
 
 import { fetchResource } from './fetch';
-import { ShopifyCallLimit, getCallLimit } from './throttle';
+import { getCallLimit } from './throttle';
 
 
 (async () => {
@@ -15,7 +15,7 @@ import { ShopifyCallLimit, getCallLimit } from './throttle';
 
   let shop = new Shopify(config['store-1']);
 
-  let callLimit = await getCallLimit(shop as ShopifyCallLimit, true);
+  let callLimit = await getCallLimit(shop, true);
   let resources = await fetchResource(shop, shop.product, callLimit);
 
   console.log(resources.length);

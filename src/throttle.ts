@@ -10,11 +10,11 @@ export type ShopifyCallLimit = Shopify & {
 }
 
 
-export const getCallLimit = async (shop: ShopifyCallLimit, logging = false): Promise<number> => {
+export const getCallLimit = async (shop: Shopify, logging = false): Promise<number> => {
   let callLimit = -1;
-  shop.once('callLimits', (currentLimit: { max: number }) => callLimit = currentLimit.max);
+  (shop as ShopifyCallLimit).once('callLimits', (currentLimit: { max: number }) => callLimit = currentLimit.max);
   await shop.product.count();
-  if (logging) shop.addListener('callLimits', console.log);
+  if (logging) (shop as ShopifyCallLimit).addListener('callLimits', console.log);
   return callLimit;
 }
 
