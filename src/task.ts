@@ -7,8 +7,7 @@ import { CALL_BUFFER } from './constants';
 
 
 export interface IShopifyTask<R> {
-  resource: IFetchableResource<R>;
-  params?: { limit: number, page: number };
+  dispatch: () => Promise<R[]>;
 }
 
 export interface IShopifyTaskResponse<R> {
@@ -22,10 +21,9 @@ export interface ITaskBatch<R> {
 
 
 const dispatchTask = async <R>(task: IShopifyTask<R>): Promise<IShopifyTaskResponse<R>> => {
-  const { resource, params } = task;
   let response: R[] | Error = []
   try {
-    response = await resource.list(params);
+    response = await task.dispatch();
   } catch (err) {
     response = err.response.body as Error;
   }
@@ -33,7 +31,7 @@ const dispatchTask = async <R>(task: IShopifyTask<R>): Promise<IShopifyTaskRespo
 }
 
 
-export const createFetchTaskBatch = <R>(shop: Shopify, tasks: IShopifyTask<R>[], callLimit: number, skipFirstDelay = true): ITaskBatch<R> => {
+export const createTaskBatch = <R>(shop: Shopify, tasks: IShopifyTask<R>[], callLimit: number, skipFirstDelay = true): ITaskBatch<R> => {
 
   const dispatch = async (): Promise<IShopifyTaskResponse<R>[]> => {
     let yieldTask = yieldArray(tasks);
@@ -42,7 +40,7 @@ export const createFetchTaskBatch = <R>(shop: Shopify, tasks: IShopifyTask<R>[],
 
     while (!(nextTask && nextTask.done)) {
       if (skipFirstDelay) skipFirstDelay = false;
-      else await throttle(shop as ShopifyCallLimit, callLimit);
+      else await throttle(shop, callLimit);
 
       let taskPromises: Promise<IShopifyTaskResponse<R>>[] = [];
 
@@ -63,12 +61,9 @@ export const createFetchTaskBatch = <R>(shop: Shopify, tasks: IShopifyTask<R>[],
 
 export const createFetchTask = <R>(
   resource: IFetchableResource<R>,
-  params?: {}
+  params?: { limit: number, page: number }
 ): IShopifyTask<R> | undefined => {
   return isFetchable(resource) ? {
-    resource: resource as IFetchableResource<R>,
-    params,
-    response: []
+    dispatch: async () => resource.list(params)
   } as IShopifyTask<R> : undefined;
 }
-

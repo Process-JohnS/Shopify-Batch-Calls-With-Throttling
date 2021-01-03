@@ -1,6 +1,6 @@
 
 import Shopify from 'shopify-api-node';
-import { createFetchTask, createFetchTaskBatch, IShopifyTask } from './task';
+import { createFetchTask, createTaskBatch, IShopifyTask } from './task';
 
 
 export interface IFetchableResource<R> {
@@ -30,7 +30,7 @@ export const fetchResource =  async <R>(
     if (task) tasks.push(task);
   }
 
-  let taskBatch = createFetchTaskBatch(shop, tasks, callLimit);
+  let taskBatch = createTaskBatch(shop, tasks, callLimit);
   let fetchedResources: R[] = [];
 
   for (let task of await taskBatch.dispatch()) {
