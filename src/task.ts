@@ -6,24 +6,22 @@ import { yieldArray } from './utils';
 import { CALL_BUFFER } from './constants';
 
 
-
 export interface IShopifyTask<R> {
   resource: IFetchableResource<R>;
   params?: { limit: number, page: number };
 }
 
-export interface IDispatchedShopifyTask<R> {
+export interface IShopifyTaskResponse<R> {
   response: R[] | Error;
 }
 
 export interface ITaskBatch<R> {
   tasks: IShopifyTask<R>[];
-  dispatch(): Promise<IDispatchedShopifyTask<R>[]>;
+  dispatch(): Promise<IShopifyTaskResponse<R>[]>;
 }
 
 
-
-const dispatchTask = async <R>(task: IShopifyTask<R>): Promise<IDispatchedShopifyTask<R>> => {
+const dispatchTask = async <R>(task: IShopifyTask<R>): Promise<IShopifyTaskResponse<R>> => {
   const { resource, params } = task;
   let response: R[] | Error = []
   try {
@@ -31,22 +29,22 @@ const dispatchTask = async <R>(task: IShopifyTask<R>): Promise<IDispatchedShopif
   } catch (err) {
     response = err.response.body;
   }
-  return { response } as IDispatchedShopifyTask<R>;
+  return { response } as IShopifyTaskResponse<R>;
 }
 
 
 export const createFetchTaskBatch = <R>(shop: Shopify, tasks: IShopifyTask<R>[], callLimit: number, skipFirstDelay = true): ITaskBatch<R> => {
 
-  const dispatch = async (): Promise<IDispatchedShopifyTask<R>[]> => {
+  const dispatch = async (): Promise<IShopifyTaskResponse<R>[]> => {
     let yieldTask = yieldArray(tasks);
     let nextTask: IteratorResult<IShopifyTask<R>, any> | undefined = undefined;
-    let taskResults: IDispatchedShopifyTask<R>[] = [];
+    let taskResults: IShopifyTaskResponse<R>[] = [];
 
     while (!(nextTask && nextTask.done)) {
       if (skipFirstDelay) skipFirstDelay = false;
       else await throttle(shop as ShopifyCallLimit, callLimit);
 
-      let taskPromises: Promise<IDispatchedShopifyTask<R>>[] = [];
+      let taskPromises: Promise<IShopifyTaskResponse<R>>[] = [];
 
       for (let i = 0; i < callLimit - CALL_BUFFER; i++) {
         nextTask = yieldTask.next();
@@ -73,3 +71,4 @@ export const createFetchTask = <R>(
     response: []
   } as IShopifyTask<R> : undefined;
 }
+

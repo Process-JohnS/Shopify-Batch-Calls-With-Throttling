@@ -4,12 +4,10 @@ import { delay } from './utils';
 import { THROTTLE_DELAY_MS } from './constants';
 
 
-
 export type ShopifyCallLimit = Shopify & {
   once: (event: 'callLimits', fn: (currentLimit: { max: number, remaining: number }) => void) => void;
   addListener: (event: 'callLimits', fn: (currentLimit: object) => void) => void;
 }
-
 
 
 export const getCallLimit = async (shop: ShopifyCallLimit, logging = false): Promise<number> => {
@@ -36,3 +34,4 @@ export const throttle = async (shop: ShopifyCallLimit, callLimit: number) => {
 
   console.log('Ready for next calls to send.');
 }
+

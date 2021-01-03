@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "shopify-api-node": "^3.6.0",
+    "shopify-api-node": "^3.6.0"
   },
   "devDependencies": {
     "ts-node": "^9.1.1",

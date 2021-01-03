@@ -3,12 +3,10 @@ import Shopify from 'shopify-api-node';
 import { createFetchTask, createFetchTaskBatch, IShopifyTask } from './task';
 
 
-
 export interface IFetchableResource<R> {
   count: () => Promise<number>;
   list: (params: any) => Promise<R[]>;
 }
-
 
 
 export const isFetchable = <R>(resource: object): resource is IFetchableResource<R> => {
@@ -46,3 +44,4 @@ export const fetchResource =  async <R>(
 
   return fetchedResources;
 }
+
