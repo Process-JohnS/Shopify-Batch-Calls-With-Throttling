@@ -1,7 +1,7 @@
 
 import Shopify from 'shopify-api-node';
 import { IFetchableResource, isFetchable } from './fetch';
-import { ShopifyCallLimit, throttle } from './throttle';
+import { throttle } from './throttle';
 import { yieldArray } from './utils';
 import { CALL_BUFFER } from './constants';
 
