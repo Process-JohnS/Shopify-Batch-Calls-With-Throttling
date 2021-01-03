@@ -1,0 +1,17 @@
+{
+  "store-1": {
+    "shopName": "XXX.myshopify.com",
+    "apiKey": "XXX",
+    "password": "XXX"
+  },
+  "store-2": {
+    "shopName": "XXX.myshopify.com",
+    "apiKey": "XXX",
+    "password": "XXX"
+  },
+  "store-3": {
+    "shopName": "XXX.myshopify.com",
+    "apiKey": "XXX",
+    "password": "XXX"
+  }
+}
