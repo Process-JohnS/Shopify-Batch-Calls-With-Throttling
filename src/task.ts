@@ -15,7 +15,6 @@ export interface IShopifyTaskResponse<R> {
 }
 
 export interface ITaskBatch<R> {
-  tasks: IShopifyTask<R>[];
   dispatch(): Promise<IShopifyTaskResponse<R>[]>;
 }
 
@@ -55,7 +54,7 @@ export const createTaskBatch = <R>(shop: Shopify, tasks: IShopifyTask<R>[], call
     return taskResults;
   }
 
-  return { tasks, dispatch } as ITaskBatch<R>;
+  return { dispatch } as ITaskBatch<R>;
 }
 
 
