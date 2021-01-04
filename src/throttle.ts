@@ -1,14 +1,8 @@
 
 import Shopify from 'shopify-api-node';
+import { ShopifyCallLimit } from './common/types';
 import { delay } from './utils';
 import { THROTTLE_DELAY_MS } from './constants';
-
-
-export type ShopifyCallLimit = Shopify & {
-  once: (event: 'callLimits', fn: (currentLimit: { max: number, remaining: number }) => void) => void;
-  addListener: (event: 'callLimits', fn: (currentLimit: object) => void) => void;
-}
-
 
 export const getCallLimit = async (shop: Shopify, logging = false): Promise<number> => {
   let callLimit = -1;
@@ -17,7 +11,6 @@ export const getCallLimit = async (shop: Shopify, logging = false): Promise<numb
   if (logging) (shop as ShopifyCallLimit).addListener('callLimits', console.log);
   return callLimit;
 }
-
 
 export const throttle = async (shop: Shopify, callLimit: number) => {
   console.log('Waiting for call limit to reset...');

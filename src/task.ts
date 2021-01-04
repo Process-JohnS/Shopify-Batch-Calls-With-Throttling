@@ -1,23 +1,11 @@
 
 import Shopify from 'shopify-api-node';
-import { IFetchableResource, isFetchable } from './fetch';
+import { IShopifyTask, IShopifyTaskResponse, ITaskBatch } from './common/types';
+import { isFetchable } from './fetch';
+import { IFetchableResource } from './common/types';
 import { throttle } from './throttle';
 import { yieldArray } from './utils';
 import { CALL_BUFFER } from './constants';
-
-
-export interface IShopifyTask<R> {
-  dispatch: () => Promise<R[]>;
-}
-
-export interface IShopifyTaskResponse<R> {
-  response: R[] | Error;
-}
-
-export interface ITaskBatch<R> {
-  dispatch(): Promise<IShopifyTaskResponse<R>[]>;
-}
-
 
 const dispatchTask = async <R>(task: IShopifyTask<R>): Promise<IShopifyTaskResponse<R>> => {
   let response: R[] | Error = []
@@ -28,7 +16,6 @@ const dispatchTask = async <R>(task: IShopifyTask<R>): Promise<IShopifyTaskRespo
   }
   return { response } as IShopifyTaskResponse<R>;
 }
-
 
 export const createTaskBatch = <R>(shop: Shopify, tasks: IShopifyTask<R>[], callLimit: number, skipFirstDelay = true): ITaskBatch<R> => {
 
@@ -57,7 +44,6 @@ export const createTaskBatch = <R>(shop: Shopify, tasks: IShopifyTask<R>[], call
   return { dispatch } as ITaskBatch<R>;
 }
 
-
 export const createFetchTask = <R>(
   resource: IFetchableResource<R>,
   params?: { limit: number, page: number }
@@ -66,3 +52,4 @@ export const createFetchTask = <R>(
     dispatch: async () => resource.list(params)
   } as IShopifyTask<R> : undefined;
 }
+

@@ -1,18 +1,11 @@
 
 import Shopify from 'shopify-api-node';
-import { createFetchTask, createTaskBatch, IShopifyTask } from './task';
-
-
-export interface IFetchableResource<R> {
-  count: () => Promise<number>;
-  list: (params: any) => Promise<R[]>;
-}
-
+import { createFetchTask, createTaskBatch } from './task';
+import { IFetchableResource, IShopifyTask } from './common/types';
 
 export const isFetchable = <R>(resource: object): resource is IFetchableResource<R> => {
   return 'count' in resource && 'list' in resource;
 }
-
 
 export const fetchResource =  async <R>(
   shop: Shopify,
@@ -26,7 +19,7 @@ export const fetchResource =  async <R>(
   
   let tasks: IShopifyTask<R>[] = [];
   for (let page = 1; page <= Math.ceil(resourcesTotal / 250); page++ ) {
-    let task = createFetchTask(resource, { ...params, limit: 250, page });
+    let task = createFetchTask<R>(resource, { ...params, limit: 250, page });
     if (task) tasks.push(task);
   }
 

@@ -2,9 +2,7 @@
 import Shopify from 'shopify-api-node';
 import { performance } from 'perf_hooks';
 import fs from 'fs';
-
 import config from './config.json';
-
 import { fetchResource } from './fetch';
 import { getCallLimit } from './throttle';
 
