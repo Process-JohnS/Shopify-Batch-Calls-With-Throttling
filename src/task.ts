@@ -1,14 +1,15 @@
 
-import Shopify from 'shopify-api-node';
-import { IShopifyTask, IShopifyTaskResponse, ITaskBatch } from './common/types';
+import Shopify, { IShop } from 'shopify-api-node';
+import { CreateableResourceObject, ICreateableResource, IShopifyTask, IShopifyTaskResponse, ITaskBatch } from './common/types';
 import { isFetchable } from './fetch';
+import { isCreatable } from './create';
 import { IFetchableResource } from './common/types';
 import { throttle } from './throttle';
 import { yieldArray } from './utils';
 import { CALL_BUFFER } from './constants';
 
 const dispatchTask = async <R>(task: IShopifyTask<R>): Promise<IShopifyTaskResponse<R>> => {
-  let response: R[] | Error = []
+  let response: R[] | R | Error = []
   try {
     response = await task.dispatch();
   } catch (err) {
@@ -50,6 +51,15 @@ export const createFetchTask = <R>(
 ): IShopifyTask<R> | undefined => {
   return isFetchable(resource) ? {
     dispatch: async () => resource.list(params)
+  } as IShopifyTask<R> : undefined;
+}
+
+export const createCreateTask = <R>(
+  resource: ICreateableResource<R>,
+  newResource: CreateableResourceObject<R>
+): IShopifyTask<R> | undefined => {
+  return isCreatable(resource) ? {
+    dispatch: async () => resource.create(newResource)
   } as IShopifyTask<R> : undefined;
 }
 
