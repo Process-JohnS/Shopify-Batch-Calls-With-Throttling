@@ -1,5 +1,5 @@
 
-import Shopify, { ICustomer, IProduct, IProductOption } from 'shopify-api-node';
+import Shopify, { IProduct } from 'shopify-api-node';
 import { performance } from 'perf_hooks';
 import fs from 'fs';
 import config from './config.json';
@@ -26,7 +26,6 @@ const fetchProducts = async () => {
   let writePath = './products.json'
   fs.writeFileSync(writePath, JSON.stringify(resources, null, 2));
   console.log(`Written to ${writePath}`);
-
 }
 
 
@@ -42,12 +41,15 @@ const createProducts = async () => {
   let newProduct1: CreateableResourceObject<IProduct> = {
     title: '[TEST] Process Product 1',
     options: [
-      { name: 'Size' }
+      { name: 'Size' },
+      { name: 'Size' },
+      { name: 'Size' },
+      // { name: 'Size' }
     ],
     variants: [
-      { option1: 'S', price: '9.99' },
-      { option1: 'M', price: '9.99' },
-      { option1: 'L', price: '9.99' }
+      { option1: 'S', price: '9.99', fulfillment_service: 'manual', inventory_management: 'shopify', inventory_quantity: 0 },
+      { option1: 'M', price: '9.99', fulfillment_service: 'manual', inventory_management: 'shopify', inventory_quantity: 5 },
+      { option1: 'L', price: '9.99', fulfillment_service: 'manual', inventory_management: 'shopify', inventory_quantity: 10 }
     ]
   }
   let newProduct2: CreateableResourceObject<IProduct> = {
@@ -105,8 +107,8 @@ const createProduct = async () => {
 
   let t1 = performance.now();
   console.log(`Create product execution time: ${Math.ceil(t1 - t0)}ms`);
-
 }
+
 
 
 (async () => {

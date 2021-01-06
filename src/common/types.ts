@@ -4,6 +4,7 @@ import Shopify, {
   ICustomer
 } from 'shopify-api-node';
 
+
 /**
  * Extends the standard Shopify object to listen to call limit events
  */
@@ -13,50 +14,56 @@ export type ShopifyCallLimit = Shopify & {
 }
 
 /**
- * A resource is fetchable if count and list can be called on it
- */
-export interface IFetchableResource<R> {
-  count: () => Promise<number>;
-  list: (params: any) => Promise<R[]>;
-}
-
-/**
  * A task with a single method to execute it
  */
 export interface IShopifyTask<R> {
-  dispatch: () => Promise<R[] | R | Error>;
+  dispatch: () => Promise<TaskResponse<R>>;
 }
 
+
+export type ResponseError = Error & { errors: any };
+
+export type TaskResponse<R> = R[] | R | ResponseError;
+
+
+
 /**
- * A task can respond with a list of results or a HTTP error
+ * A task can respond with a list of results (fetch), a single result (create/update), or an HTTP error
  */
 export interface IShopifyTaskResponse<R> {
-  response: R[] | R | Error;
+  response: TaskResponse<R>;
 }
 
 /**
- * Holds a collection of tasks that will be processed on dispatch
+ * Contains a dispatch method that will process a collection of tasks
  */
 export interface ITaskBatch<R> {
   dispatch(): Promise<IShopifyTaskResponse<R>[]>;
 }
 
+
 /**
- * Can invoke create on the resource
+ * Fetchable resources
  */
-export interface ICreateableResource<R> {
-  create: (params: any) => Promise<R>;
+
+/* A resource is fetchable if count and list can be invoked on it */
+export interface IFetchableResource<R> {
+  count: () => Promise<number>;
+  list: (params: any) => Promise<R[]>;
 }
 
-
-
-
-
+/* Fetch pagination */
+export type FetchableResourceObject = { limit: number, page: number; };
 
 
 /**
  * Createable resources
  */
+
+/* A resource is createable if create can be invoked on it */
+export interface ICreateableResource<R> {
+  create: (params: any) => Promise<R>;
+}
 
  /* A generic createable resource type that resolves to the correct specific type */
 export type CreateableResourceObject<R> = 

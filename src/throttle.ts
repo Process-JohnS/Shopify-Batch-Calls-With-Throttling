@@ -13,9 +13,10 @@ export const getCallLimit = async (shop: Shopify, logging = false): Promise<numb
 }
 
 export const throttle = async (shop: Shopify, callLimit: number) => {
-  console.log('Waiting for call limit to reset...');
 
   let remainingCalls: number | undefined = undefined;
+  console.log('Waiting for limit to reset');
+
   while (!remainingCalls || remainingCalls < callLimit - 1) {
     (shop as ShopifyCallLimit).once('callLimits', ({ remaining }) => {
       console.log(`Remaining: ${remaining}`);
@@ -25,6 +26,6 @@ export const throttle = async (shop: Shopify, callLimit: number) => {
     delay(THROTTLE_DELAY_MS);
   }
 
-  console.log('Ready for next calls to send.');
+  console.log('Ready to dispatch next call batch');
 }
 
