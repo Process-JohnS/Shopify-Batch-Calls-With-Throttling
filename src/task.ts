@@ -11,20 +11,37 @@ import {
   IShopifyDeleteTask,
   IShopifyTaskResponse,
   TaskResponse,
+  TaskLogger,
   ResponseError
 } from './common/types';
 import { isFetchable, isCreatable } from './resource';
 
 export const dispatchTaskAsync = async <R>(task: IShopifyTask<R>): Promise<IShopifyTaskResponse<R>> => {
   let response: TaskResponse<R> = [];
+
   try {
     response = await task.dispatch();
   } catch (err) {
-    let resourceName: string | number | null = null;
+
     response = err.response.body as ResponseError;
+    let action = task.actionType.toUpperCase();
+    let errors = JSON.stringify(response.errors, null, 0).replace(/\\n/g, '');
+
+    // log errors
+    if (task.logger) {
+      switch (task.actionType) {
+        case 'create':
+          let productTitle = (task as IShopifyCreateTask<R>).resourceTitle;
+          task.logger.writeRow(action, productTitle, errors);
+          break;
+      }
+    }
+
+    // print errors
+    let resourceName: string | number | null = null;
     switch (task.actionType) {
       case 'create':
-        resourceName = `"${(task as IShopifyCreateTask<R>).resourceTitle}"`;
+        resourceName = (task as IShopifyCreateTask<R>).resourceTitle;
         break;
       case 'update':
         resourceName = (task as IShopifyUpdateTask<R>).resourceId;
@@ -32,7 +49,8 @@ export const dispatchTaskAsync = async <R>(task: IShopifyTask<R>): Promise<IShop
       case 'delete':
         resourceName = (task as IShopifyDeleteTask<R>).resourceId;
     }
-    console.log(`${task.actionType.toUpperCase()} error${resourceName ? ` for ${resourceName}` : ''}: \n${JSON.stringify(response.errors, null, 2)}`);
+    console.log(`${action} error${resourceName ? ` for "${resourceName}"` : ''}: ${errors}`);
+
   }
   return { response } as IShopifyTaskResponse<R>;
 }
@@ -41,21 +59,27 @@ export const createFetchTask = <R>(
   resource: IFetchableResource<R>,
   params?: FetchableResourceObject
 ): IShopifyTask<R> | undefined => {
+
   return isFetchable(resource) ? {
     actionType: 'fetch',
     dispatch: async () => resource.list(params)
   } as IShopifyFetchTask<R> : undefined;
+
 }
 
 export const createCreateTask = <R>(
   resource: ICreateableResource<R>,
-  newResource: CreateableResourceObject<R>
+  newResource: CreateableResourceObject<R>,
+  logger?: TaskLogger
 ): IShopifyTask<R> | undefined => {
+
   return isCreatable(resource) ? {
     actionType: 'create',
     resourceTitle: newResource.title,
-    dispatch: async () => resource.create(newResource)
+    dispatch: async () => resource.create(newResource),
+    logger
   } as IShopifyCreateTask<R> : undefined;
+
 }
 
 export const createUpdateTask = <R>(

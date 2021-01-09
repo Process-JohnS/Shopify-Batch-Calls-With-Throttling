@@ -5,6 +5,11 @@ import Shopify, {
 } from 'shopify-api-node';
 
 
+export interface TaskLogger {
+  writeRow: (...columnValues: string[]) => void;
+}
+
+
 /**
  * Extends the standard Shopify object to listen to call limit events
  */
@@ -21,6 +26,7 @@ type ActionType = 'fetch' | 'create' | 'update' | 'delete';
 export interface IShopifyTask<R> {
   actionType: ActionType;
   dispatch: () => Promise<TaskResponse<R>>;
+  logger?: TaskLogger;
 }
 
 export interface IShopifyFetchTask<R> extends IShopifyTask<R> {

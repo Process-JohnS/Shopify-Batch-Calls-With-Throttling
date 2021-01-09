@@ -7,6 +7,7 @@ import { CreateableResourceObject,
 import { createCreateTask } from './task';
 import { createTaskBatch } from './task-batch';
 import { handleResponse } from './response';
+import { createTableLogger } from './logger/table-logger';
 
 export const createResources = async <R extends { id: number }>(
   shop: Shopify,
@@ -17,9 +18,14 @@ export const createResources = async <R extends { id: number }>(
 
   console.log(`${newResources.length} resources to create`);
   let tasks: IShopifyTask<R>[] = [];
+  let logger = createTableLogger({
+    outDir: './logs',
+    tableHeaders: ['Action', 'Product Title', 'Error'],
+    columnWidths: [10, 40, 100]
+  })
 
   for (let newResource of newResources) {
-    let task = createCreateTask(resource, newResource);
+    let task = createCreateTask(resource, newResource, logger);
     if (task) tasks.push(task);
   }
 

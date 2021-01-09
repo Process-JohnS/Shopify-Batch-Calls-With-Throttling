@@ -44,8 +44,8 @@ const createProducts = async () => {
       title: `[TEST] Process Product ${i}`,
       options: [
         { name: 'Size' },
-        { name: 'Size' },
-        { name: 'Size' }
+        // { name: 'Size' },
+        // { name: 'Size' }
       ],
       variants: [
         { option1: 'S', price: '9.99', fulfillment_service: 'manual', inventory_management: 'shopify', inventory_quantity: 0 },
@@ -96,8 +96,6 @@ const createProduct = async () => {
 (async () => {
 
   createProducts();
-
-  console.log()
 
 })()
 
