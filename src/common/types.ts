@@ -20,6 +20,10 @@ export type ShopifyCallLimit = Shopify & {
 
 type ActionType = 'fetch' | 'create' | 'update' | 'delete';
 
+export type ResponseError = Error & { errors: any };
+
+export type TaskResponse<R> = R[] | R | ResponseError;
+
 /**
  * A task with a single method to execute it
  */
@@ -47,12 +51,6 @@ export interface IShopifyDeleteTask<R> extends IShopifyTask<R> {
   actionType: 'delete';
   resourceId: number;
 }
-
-
-export type ResponseError = Error & { errors: any };
-
-export type TaskResponse<R> = R[] | R | ResponseError;
-
 
 
 /**
@@ -139,6 +137,17 @@ Partial<
  * Updateable Resources
  */
 
+/* A resource is updateable if update can be invoked on it */
+
+export interface IUpdateableResource<R> {
+  update: (params: any) => Promise<R>;
+}
+
+/* A generic createable resource type that resolves to the correct specific type */
+export type UpdateableResourceObject<R> = 
+  R extends IProduct ? UpdateableProductObject
+  : never;
+
 /* Product */
 export type UpdateableProductObject =
   Required<
@@ -149,3 +158,4 @@ export type UpdateableProductObject =
     Omit<IProduct, 
     | 'id'
   >>
+

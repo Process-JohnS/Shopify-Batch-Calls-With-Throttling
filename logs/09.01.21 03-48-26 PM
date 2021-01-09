@@ -1,5 +1,0 @@
-Action    Product Title                           Error
-CREATE    [TEST] Process Product 26               "Exceeded 2 calls per second for api client. Reduce request rates to resume uninterrupted service
-CREATE    [TEST] Process Product 33               "Exceeded 2 calls per second for api client. Reduce request rates to resume uninterrupted service
-CREATE    [TEST] Process Product 31               "Exceeded 2 calls per second for api client. Reduce request rates to resume uninterrupted service
-CREATE    [TEST] Process Product 4                "Exceeded 2 calls per second for api client. Reduce request rates to resume uninterrupted service

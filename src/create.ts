@@ -18,11 +18,13 @@ export const createResources = async <R extends { id: number }>(
 
   console.log(`${newResources.length} resources to create`);
   let tasks: IShopifyTask<R>[] = [];
+
+  // log file
   let logger = createTableLogger({
     outDir: './logs',
     tableHeaders: ['Action', 'Product Title', 'Error'],
     columnWidths: [10, 40, 100]
-  })
+  });
 
   for (let newResource of newResources) {
     let task = createCreateTask(resource, newResource, logger);
