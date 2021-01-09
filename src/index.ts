@@ -5,7 +5,7 @@ import fs from 'fs';
 import config from './config.json';
 import { fetchResource } from './fetch';
 import { createResource, createResources } from './create';
-import { CreateableResourceObject } from './common/types';
+import { CreateableProductObject, CreateableResourceObject } from './common/types';
 import { getCallLimit } from './throttle';
 
 
@@ -36,45 +36,27 @@ const createProducts = async () => {
   // DO NOT MODIFY WHEN CREATING RESOURCES
   let shop = new Shopify(config['store-1']);
 
-  let callLimit = await getCallLimit(shop, true);
+  let callLimit = await getCallLimit(shop, false);
 
-  let newProduct1: CreateableResourceObject<IProduct> = {
-    title: '[TEST] Process Product 1',
-    options: [
-      { name: 'Size' },
-      { name: 'Size' },
-      { name: 'Size' },
-      // { name: 'Size' }
-    ],
-    variants: [
-      { option1: 'S', price: '9.99', fulfillment_service: 'manual', inventory_management: 'shopify', inventory_quantity: 0 },
-      { option1: 'M', price: '9.99', fulfillment_service: 'manual', inventory_management: 'shopify', inventory_quantity: 5 },
-      { option1: 'L', price: '9.99', fulfillment_service: 'manual', inventory_management: 'shopify', inventory_quantity: 10 }
-    ]
+  let newProducts: CreateableProductObject[] = [];
+  for (let i = 0; i < 100; i++) {
+    let newProduct: CreateableResourceObject<IProduct> = {
+      title: `[TEST] Process Product ${i}`,
+      options: [
+        { name: 'Size' },
+        { name: 'Size' },
+        { name: 'Size' }
+      ],
+      variants: [
+        { option1: 'S', price: '9.99', fulfillment_service: 'manual', inventory_management: 'shopify', inventory_quantity: 0 },
+        { option1: 'M', price: '9.99', fulfillment_service: 'manual', inventory_management: 'shopify', inventory_quantity: 5 },
+        { option1: 'L', price: '9.99', fulfillment_service: 'manual', inventory_management: 'shopify', inventory_quantity: 10 }
+      ]
+    };
+    newProducts.push(newProduct);
   }
-  let newProduct2: CreateableResourceObject<IProduct> = {
-    title: '[TEST] Process Product 2',
-    options: [
-      { name: 'Color' }
-    ],
-    variants: [
-      { option1: 'Red', price: '9.99' },
-      { option1: 'Green', price: '9.99' },
-      { option1: 'Blue', price: '9.99' }
-    ]
-  }
-  let newProduct3: CreateableResourceObject<IProduct> = {
-    title: '[TEST] Process Product 3',
-    options: [
-      { name: 'Size' }
-    ],
-    variants: [
-      { option1: 'S', price: '9.99' },
-      { option1: 'M', price: '9.99' },
-      { option1: 'L', price: '9.99' }
-    ]
-  }
-  let createdProducts = await createResources(shop, shop.product, callLimit, [newProduct1, newProduct2, newProduct3]);
+
+  let createdProducts = await createResources(shop, shop.product, callLimit, newProducts);
   console.log(createdProducts);
 
   let t1 = performance.now();
@@ -113,7 +95,9 @@ const createProduct = async () => {
 
 (async () => {
 
-  fetchProducts();
+  createProducts();
+
+  console.log()
 
 })()
 

@@ -1,7 +1,7 @@
 
 import Shopify from 'shopify-api-node';
 import { IShopifyTask, ITaskBatch, IShopifyTaskResponse } from './common/types';
-import { dispatchTask } from './task';
+import { dispatchTaskAsync } from './task';
 import { throttle } from './throttle';
 import { yieldArray } from './utils';
 import { CALL_BUFFER } from './constants';
@@ -13,7 +13,7 @@ export const createTaskBatch = <R>(
   skipFirstDelay = true
 ): ITaskBatch<R> => {
 
-  const dispatch = async (): Promise<IShopifyTaskResponse<R>[]> => {
+  const dispatchBatchAsync = async (): Promise<IShopifyTaskResponse<R>[]> => {
     let yieldTask = yieldArray(tasks);
     let nextTask: IteratorResult<IShopifyTask<R>, any> | undefined = undefined;
     let taskResults: IShopifyTaskResponse<R>[] = [];
@@ -27,7 +27,7 @@ export const createTaskBatch = <R>(
       for (let i = 0; i < callLimit - CALL_BUFFER; i++) {
         nextTask = yieldTask.next();
         if (nextTask.done) break;
-        taskPromises.push(dispatchTask(nextTask.value));
+        taskPromises.push(dispatchTaskAsync(nextTask.value));
       }
 
       taskResults.push(...(await Promise.all(taskPromises)));
@@ -35,6 +35,6 @@ export const createTaskBatch = <R>(
     return taskResults;
   }
 
-  return { dispatch } as ITaskBatch<R>;
+  return { dispatch: dispatchBatchAsync } as ITaskBatch<R>;
 }
 

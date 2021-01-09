@@ -13,11 +13,33 @@ export type ShopifyCallLimit = Shopify & {
   addListener: (event: 'callLimits', fn: (currentLimit: object) => void) => void;
 }
 
+type ActionType = 'fetch' | 'create' | 'update' | 'delete';
+
 /**
  * A task with a single method to execute it
  */
 export interface IShopifyTask<R> {
+  actionType: ActionType;
   dispatch: () => Promise<TaskResponse<R>>;
+}
+
+export interface IShopifyFetchTask<R> extends IShopifyTask<R> {
+  actionType: 'fetch';
+}
+
+export interface IShopifyCreateTask<R> extends IShopifyTask<R> {
+  actionType: 'create';
+  resourceTitle: string;
+}
+
+export interface IShopifyUpdateTask<R> extends IShopifyTask<R> {
+  actionType: 'update';
+  resourceId: number;
+}
+
+export interface IShopifyDeleteTask<R> extends IShopifyTask<R> {
+  actionType: 'delete';
+  resourceId: number;
 }
 
 
