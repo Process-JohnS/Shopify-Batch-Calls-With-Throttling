@@ -31,8 +31,8 @@ export const dispatchTaskAsync = async <R>(task: IShopifyTask<R>): Promise<IShop
     if (task.logger) {
       switch (task.actionType) {
         case 'create':
-          let productTitle = (task as IShopifyCreateTask<R>).resourceTitle;
-          task.logger.writeRow(action, productTitle, errors);
+          let resourceTitle = (task as IShopifyCreateTask<R>).resourceTitle;
+          task.logger.writeRow(action, resourceTitle, errors);
           break;
       }
     }

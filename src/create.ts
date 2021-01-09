@@ -22,7 +22,7 @@ export const createResources = async <R extends { id: number }>(
   // log file
   let logger = createTableLogger({
     outDir: './logs',
-    tableHeaders: ['Action', 'Product Title', 'Error'],
+    tableHeaders: ['Action', 'Resrouce Title', 'Error'],
     columnWidths: [10, 40, 100]
   });
 
