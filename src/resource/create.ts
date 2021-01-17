@@ -7,8 +7,8 @@ import {
   IShopifyCreateTask,
   TaskLogger,
 } from '../common/types';
-import { createTaskBatch } from '../task/task-batch';
-import { handleResponse } from '../task/task-response';
+import { createTaskBatch } from '../task/batch';
+import { handleResponse } from '../task/response';
 import { createTableLogger } from '../logger/table-logger';
 
 
