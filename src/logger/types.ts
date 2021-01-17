@@ -1,4 +1,3 @@
-
 import { TaskLogger } from './../common/types';
 
 export interface TableLoggerOptions {

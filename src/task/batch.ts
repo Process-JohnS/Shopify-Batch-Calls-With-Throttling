@@ -1,4 +1,3 @@
-
 import Shopify from 'shopify-api-node';
 import { CALL_BUFFER } from '../common/constants';
 import {

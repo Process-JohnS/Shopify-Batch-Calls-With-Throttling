@@ -1,4 +1,3 @@
-
 import Shopify from 'shopify-api-node';
 import { ShopifyCallLimit } from '../common/types';
 import { delay } from '../utils/utils';

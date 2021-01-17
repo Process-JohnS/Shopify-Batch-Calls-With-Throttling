@@ -1,4 +1,3 @@
-
 import moment from 'moment';
 import fs from 'fs';
 import { DEFAULT_COLUMN_PADDING } from './constants';
