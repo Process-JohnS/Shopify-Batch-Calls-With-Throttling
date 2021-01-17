@@ -1,12 +1,12 @@
 
-import Shopify, { IProduct } from 'shopify-api-node';
+import Shopify from 'shopify-api-node';
 import { performance } from 'perf_hooks';
 import fs from 'fs';
 import config from './config.json';
-import { fetchResource } from './fetch';
-import { createResource, createResources } from './create';
+import { fetchResource } from './resource/fetch';
+import { createResource, createResources } from './resource/create';
 import { CreateableProductObject, CreateableResourceObject } from './common/types';
-import { getCallLimit } from './throttle';
+import { getCallLimit } from './rate-limiting/throttle';
 
 
 const fetchProducts = async () => {
@@ -40,7 +40,7 @@ const createProducts = async () => {
 
   let newProducts: CreateableProductObject[] = [];
   for (let i = 0; i < 100; i++) {
-    let newProduct: CreateableResourceObject<IProduct> = {
+    let newProduct: CreateableResourceObject<Shopify.IProduct> = {
       title: `[TEST] Process Product ${i}`,
       options: [
         { name: 'Size' },
@@ -72,7 +72,7 @@ const createProduct = async () => {
 
   let callLimit = await getCallLimit(shop, true);
 
-  let newProduct1: CreateableResourceObject<IProduct> = {
+  let newProduct1: CreateableResourceObject<Shopify.IProduct> = {
     title: '[TEST] Process Product 1',
     options: [
       { name: 'Size' }

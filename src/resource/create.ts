@@ -1,14 +1,45 @@
 
 import Shopify from 'shopify-api-node';
-import { CreateableResourceObject,
+import {
+  CreateableResourceObject,
   ICreateableResource,
-  IShopifyTask
-} from './common/types';
-import { createCreateTask } from './task';
-import { createTaskBatch } from './task-batch';
-import { handleResponse } from './response';
-import { createTableLogger } from './logger/table-logger';
+  IShopifyTask,
+  IShopifyCreateTask,
+  TaskLogger,
+} from '../common/types';
+import { createTaskBatch } from '../task/task-batch';
+import { handleResponse } from '../task/task-response';
+import { createTableLogger } from '../logger/table-logger';
 
+
+/**
+ *  Only allow create calls on resources that have the create method defined
+ */
+export const isCreatable = <R>(resource: object): resource is ICreateableResource<R> => {
+  return 'create' in resource;
+}
+
+
+/**
+ *  Create a task with that will create a resource
+ */
+export const createCreateTask = <R>(
+  resource: ICreateableResource<R>,
+  newResource: CreateableResourceObject<R>,
+  logger?: TaskLogger
+): IShopifyTask<R> | undefined => {
+  return isCreatable(resource) ? {
+    actionType: 'create',
+    resourceTitle: newResource.title,
+    dispatch: async () => resource.create(newResource),
+    logger
+  } as IShopifyCreateTask<R> : undefined;
+}
+
+
+/**
+ * Sends multiple asynchronous create tasks
+ */
 export const createResources = async <R extends { id: number }>(
   shop: Shopify,
   resource: ICreateableResource<R>,
@@ -19,7 +50,7 @@ export const createResources = async <R extends { id: number }>(
   console.log(`${newResources.length} resources to create`);
   let tasks: IShopifyTask<R>[] = [];
 
-  // log file
+  // Set up the error logger
   let logger = createTableLogger({
     outDir: './logs',
     tableHeaders: ['Action', 'Resrouce Title', 'Error'],
@@ -35,16 +66,18 @@ export const createResources = async <R extends { id: number }>(
   return handleResponse(await taskBatch.dispatch());
 }
 
+
+/**
+ * Sends a single asynchronous create task
+ */
 export const createResource = async <R extends { id: number }>(
   shop: Shopify,
   resource: ICreateableResource<R>,
   callLimit: number,
   newResource: CreateableResourceObject<R>
 ): Promise<R[]> => {
-
   let task = createCreateTask(resource, newResource);
   let taskBatch = createTaskBatch(shop, [task] as IShopifyTask<R>[], callLimit);
-
   return handleResponse(await taskBatch.dispatch());
 }
 

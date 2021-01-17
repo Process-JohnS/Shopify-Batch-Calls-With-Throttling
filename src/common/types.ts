@@ -1,8 +1,5 @@
 
-import Shopify, {
-  IProduct, IProductVariant, IProductOption,
-  ICustomer
-} from 'shopify-api-node';
+import Shopify from 'shopify-api-node';
 
 
 export interface TaskLogger {
@@ -23,6 +20,7 @@ type ActionType = 'fetch' | 'create' | 'update' | 'delete';
 export type ResponseError = Error & { errors: any };
 
 export type TaskResponse<R> = R[] | R | ResponseError;
+
 
 /**
  * A task with a single method to execute it
@@ -60,6 +58,7 @@ export interface IShopifyTaskResponse<R> {
   response: TaskResponse<R>;
 }
 
+
 /**
  * Contains a dispatch method that will process a collection of tasks
  */
@@ -93,17 +92,17 @@ export interface ICreateableResource<R> {
 
  /* A generic createable resource type that resolves to the correct specific type */
 export type CreateableResourceObject<R> = 
-  R extends IProduct ? CreateableProductObject
+  R extends Shopify.IProduct ? CreateableProductObject
   : never;
 
 /* Product */
 export interface CreateableProductObject extends Omit<
   Required<
-    Pick<IProduct,
+    Pick<Shopify.IProduct,
     | 'title'
     >> &
   Partial<
-    Omit<IProduct,
+    Omit<Shopify.IProduct,
     | 'title'
     >>,
   | 'options'
@@ -118,16 +117,16 @@ export interface CreateableProductObject extends Omit<
 }
 
 /* Product Options  */
-export type CreateableOptionObject = Pick<IProductOption, 'name'>
+export type CreateableOptionObject = Pick<Shopify.IProductOption, 'name'>
 
 /* Product Variants */
 export type CreateableVariantObject = Required<
-  Pick<IProductVariant,
+  Pick<Shopify.IProductVariant,
   | 'option1'
   | 'price'
 >> &
 Partial<
-  Omit<IProductVariant,
+  Omit<Shopify.IProductVariant,
   | 'option1'
   | 'price'
 >>
@@ -145,17 +144,17 @@ export interface IUpdateableResource<R> {
 
 /* A generic createable resource type that resolves to the correct specific type */
 export type UpdateableResourceObject<R> = 
-  R extends IProduct ? UpdateableProductObject
+  R extends Shopify.IProduct ? UpdateableProductObject
   : never;
 
 /* Product */
 export type UpdateableProductObject =
   Required<
-    Pick<IProduct,
+    Pick<Shopify.IProduct,
     | 'id'
   >> &
   Partial<
-    Omit<IProduct, 
+    Omit<Shopify.IProduct, 
     | 'id'
   >>
 
