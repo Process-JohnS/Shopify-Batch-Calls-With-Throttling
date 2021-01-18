@@ -1,6 +1,19 @@
 # shopify-client-core
 
-## CRUD Operations
+Delivers maximum call throughput using bursts and throttling techniques
+
+E.g.
+
+Shopify Basic
+  - 40 call bursts
+  - replenishes at 2 requests per second
+
+Shopify Plus
+  - 80 call bursts
+  - replenishes at 4 requests per second
+
+
+## Operations
 
 ### Fetch
 ``` ts
@@ -25,21 +38,4 @@ let newProduct: CreateableResourceObject<Shopify.IProduct> = {
 
 await createResources(shop, shop.product, callLimit, newProducts);
 ```
-
-
-
-
-## Performance
-Delivers maximum call throughput using bursts and throttling techniques
-
-
-E.g.
-
-Shopify Basic
-  - 40 call bursts
-  - replenishes at 2 requests per second
-
-Shopify Plus
-  - 80 call bursts
-  - replenishes at 4 requests per second
 
