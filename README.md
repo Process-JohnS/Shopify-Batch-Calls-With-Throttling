@@ -1,12 +1,13 @@
 # shopify-client-core
 
+## CRUD Operations
 
-**Fetch**
+### Fetch
 ``` ts
 let resources = await fetchResource(shop, shop.product, callLimit);
 ```
 
-**Create**
+### Create
 ``` ts
 let newProduct: CreateableResourceObject<Shopify.IProduct> = {
   title: `Test Product`,
@@ -27,20 +28,8 @@ await createResources(shop, shop.product, callLimit, newProducts);
 
 
 
-Solves 3 main issues that haven't been addressed by our current migration scripts:
 
-
-### Generic
-```
-generic
-```
-
-### Type Safe
-
-
-
-
-### Performance
+## Performance
 Delivers maximum call throughput using bursts and throttling techniques
 
 
