@@ -48,6 +48,6 @@ await createResources(shop, shop.product, callLimit, [newProduct]);
 
 ## Benchmark
 
-Fetch: 60000 resources < 1m  
-Create, Delete, Update: 3200 resources in < 1m
+Fetch: 60000 resources in < 1 minute
+Create, Delete, Update: 3200 resources in < 1 minute
 
