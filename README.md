@@ -3,7 +3,6 @@
 Delivers maximum call throughput using bursts and throttling techniques
 
 **Shopify Basic** - 40 call bursts, replenishes at 2 requests per second
-
 **Shopify Plus** - 80 call bursts, replenishes at 4 requests per second
 
 
