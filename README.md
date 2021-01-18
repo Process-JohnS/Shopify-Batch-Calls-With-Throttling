@@ -1,8 +1,6 @@
 # shopify-client-core
 
 
-
-
 **Fetch**
 ``` ts
 let resources = await fetchResource(shop, shop.product, callLimit);
@@ -12,9 +10,7 @@ let resources = await fetchResource(shop, shop.product, callLimit);
 ``` ts
 let newProduct: CreateableResourceObject<Shopify.IProduct> = {
   title: `Test Product`,
-  options: [
-    { name: 'Size' }
-  ],
+  options: [{ name: 'Size' }],
   variants: [
     {
       option1: 'S',
@@ -24,9 +20,6 @@ let newProduct: CreateableResourceObject<Shopify.IProduct> = {
       inventory_quantity: 1
     },
   ]
-  
-  
-
 };
 
 await createResources(shop, shop.product, callLimit, newProducts);
