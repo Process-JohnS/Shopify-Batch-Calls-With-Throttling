@@ -4,12 +4,12 @@
 
 
 **Fetch**
-```
+``` ts
 let resources = await fetchResource(shop, shop.product, callLimit);
 ```
 
 **Create**
-```
+``` ts
 let newProduct: CreateableResourceObject<Shopify.IProduct> = {
   title: `Test Product`,
   options: [
