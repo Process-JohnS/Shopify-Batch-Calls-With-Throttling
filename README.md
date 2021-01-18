@@ -3,14 +3,14 @@
 Delivers maximum call throughput using bursts and throttling techniques
 
 
-1. Define a Shopify shop
+1. Define a Shopify shop  
 ``` ts
 let shop = new Shopify(config['store-1']);
 ```
 
-2. Get the call limit
+2. Get the call limit  
 **Shopify Basic** - 40 call bursts, replenishes at 2 requests per second  
-**Shopify Plus** - 80 call bursts, replenishes at 4 requests per second
+**Shopify Plus** - 80 call bursts, replenishes at 4 requests per second  
 ``` ts
 let callLimit = await getCallLimit(shop, true);
 ```
