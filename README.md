@@ -36,6 +36,6 @@ let newProduct: CreateableResourceObject<Shopify.IProduct> = {
   ]
 };
 
-await createResources(shop, shop.product, callLimit, newProducts);
+await createResources(shop, shop.product, callLimit, [newProduct]);
 ```
 
