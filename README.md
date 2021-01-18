@@ -19,7 +19,8 @@ type safe
 Delivers maximum call throughput using bursts and throttling techniques
 
 
-E.g. 
+E.g.
+
 Shopify Basic
   - 40 call bursts
   - replenishes at 2 requests per second
