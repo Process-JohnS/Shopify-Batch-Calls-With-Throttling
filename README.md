@@ -2,8 +2,16 @@
 
 Delivers maximum call throughput using bursts and throttling techniques
 
+
+
+1. Get the call limit of a particular shopify shop
 **Shopify Basic** - 40 call bursts, replenishes at 2 requests per second  
 **Shopify Plus** - 80 call bursts, replenishes at 4 requests per second
+``` ts
+let callLimit = await getCallLimit(shop, true);
+```
+
+
 
 
 
